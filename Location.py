@@ -2,12 +2,12 @@ import requests
 import bs4
 
 ##Get the current location of the device from it's IP##
-
+#returns city,state and country
 class InvalidScrapeException(Exception):
     "Raised when the scraping is unseccessful in finding correct tag"
     pass
         
-class Location_From_IP():
+class IPLocation():
 
     def __init__(self):
         self.city  = ''
@@ -15,7 +15,7 @@ class Location_From_IP():
         self.country = ''
         self.time = 0
 
-    def get_location(self):
+    def get_location(self): #returns the city,state and country
 
         try:
 
@@ -34,19 +34,16 @@ class Location_From_IP():
                 self.state = self.location.split()[1]
                 self.country = self.location.split()[2][1:3]
 
+                return list((self.city,self.state,self.country))
+
             else:
                 raise InvalidScrapeException
             
         except InvalidScrapeException:
             print(f" Received '{self.element}' instead of 'IP Location'.")
             
+            
 
     def __str__ (self):
-        return f"The user is in {self.city}, {self.state}, in country code {self.country}."
-
-    
-TL = Location_From_IP()
-
-TL.get_location()
-print(TL)
+        return f"The user is in {self.city}, {self.state}, in country code {self.country}."\
 
