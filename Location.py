@@ -1,8 +1,8 @@
 import requests
 import bs4
-
+from datetime import datetime 
 ##Get the current location of the device from it's IP##
-#returns city,state and country
+#object has attributes [.city, .state, .country, .country_code, .lat, .long ] once get_location is called.
 class InvalidScrapeException(Exception):
     "Raised when the scraping is unseccessful in finding correct tag"
     pass
@@ -13,9 +13,13 @@ class IPLocation():
         self.city  = ''
         self.state = ''
         self.country = ''
-        self.time = 0
+        self.country_code = ''
+        self.lat = 0
+        self.long = 0
+        self.sunrise = datetime.now()
+        self.sunset = datetime.now()
 
-    def get_location(self): #returns the city,state and country
+    def get_location(self): #
 
         try:
 
@@ -34,7 +38,7 @@ class IPLocation():
                 self.state = self.location.split()[1]
                 self.country = self.location.split()[2][1:3]
 
-                return list((self.city,self.state,self.country))
+                #return list((self.city,self.state,self.country, [two datetime placeholders]))
 
             else:
                 raise InvalidScrapeException
