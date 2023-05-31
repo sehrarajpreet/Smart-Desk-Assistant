@@ -26,22 +26,26 @@ class IPLocation():
             #checks if the current element at [2] is the IP Location and if so, saves the city and state and country code
             scrape_result = requests.get("https://www.iplocation.net/")
             scraped_soup = bs4.BeautifulSoup(scrape_result.text,"lxml")
-            self.element = scraped_soup.select('th')[2].getText()
-            
-            if self.element == "IP Location":
-                
-                self.location = scraped_soup.select('td')[2].getText()
-                self.location = self.location.replace(",","")
+            span_element = scraped_soup.find('span', class_='ipinfo--location')
 
-                #parse location into city/state/country
-                self.city = self.location.split()[0]
-                self.state = self.location.split()[1]
-                self.country = self.location.split()[2][1:3]
+            self.element  = span_element.text.split('  ')[0]
+            print(self.element)
 
-                #return list((self.city,self.state,self.country, [two datetime placeholders]))
-
-            else:
+            # self.element = scraped_soup.select('th')[2].getText()
+            if not self.element:
                 raise InvalidScrapeException
+                
+            # self.location = scraped_soup.select('td')[2].getText()
+            self.element = self.element.replace(",","")
+            #parse location into city/state/country
+            self.city = self.element.split()[0]
+            self.state = self.element.split()[1]
+            self.country = self.element.split()[2][1:3]
+
+
+            #return list((self.city,self.state,self.country, [two datetime placeholders]))
+
+           
             
         except InvalidScrapeException:
             print(f" Received '{self.element}' instead of 'IP Location'.")
